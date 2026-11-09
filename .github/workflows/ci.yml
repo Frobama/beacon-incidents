@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+
+      - name: Generar stubs de contratos
+        run: make proto
+
+      # Los pasos siguientes se activan solos cuando exista el proyecto Maven (Fase 1).
+      - uses: actions/setup-java@v4
+        if: hashFiles('pom.xml') != ''
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build y tests
+        if: hashFiles('pom.xml') != ''
+        run: mvn -B verify
+
+      - name: Build de imagen Docker
+        if: hashFiles('Dockerfile') != ''
+        run: docker build -t beacon-incidents:ci .
