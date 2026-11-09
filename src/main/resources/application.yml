@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: beacon-incidents
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/incidents}
+    username: ${DB_USER:beacon}
+    password: ${DB_PASSWORD:beacon}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+beacon:
+  grpc:
+    port: ${GRPC_PORT:9090}

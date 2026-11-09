@@ -3,7 +3,7 @@ clean: true
 managed:
   enabled: true
 plugins:
-  - remote: buf.build/protocolbuffers/java
+  - remote: buf.build/protocolbuffers/java:v28.3
     out: gen/java
-  - remote: buf.build/grpc/java
+  - remote: buf.build/grpc/java:v1.68.2
     out: gen/java
